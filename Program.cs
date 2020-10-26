@@ -11,8 +11,8 @@ namespace PogCode_Interpreter
         public static int LineN;
         public static string Line;
         public static Dictionary<string, string> Variables = new Dictionary<string, string>();
-        public static Dictionary<string, int> VariablesInt = new Dictionary<string, int>();
-        public static Dictionary<string, float> VariablesFloat = new Dictionary<string, float>();
+        public static Dictionary<string, string> VariablesInt = new Dictionary<string, string>();
+        public static Dictionary<string, string> VariablesFloat = new Dictionary<string, string>();
     }
 
     class Commands
@@ -99,48 +99,132 @@ namespace PogCode_Interpreter
             Console.ReadLine();
         }
 
-        public void PogU(string varName)
+        public void PogU(string varName, string type)
         {
-            if (Variables.ContainsKey(varName))
+            bool contains = false;
+            Dictionary<string, string> table = new Dictionary<string, string>();
+            if (Variables.ContainsKey(varName) || VariablesInt.ContainsKey(varName) || VariablesFloat.ContainsKey(varName))
             {
-                Variables[varName] = null;
+                contains = true;
             }
-            else
+            switch (type)
             {
-                Variables.Add(varName, null);
+                case "string":
+                    table = Variables;
+                    break;
+                case "int":
+                    table = VariablesInt;
+                    break;
+                case "float":
+                    table = VariablesFloat;
+                    break;
+                case "default":
+                    p.ExceptionHandler(11, LineN, Line);
+                    break;
             }
-        }
-
-        public void PogU(string varName, string value)
-        {
-            if (Variables.ContainsKey(varName))
+            if (contains)
             {
-                Variables[varName] = value;
-            }
-            else
-            {
-                Variables.Add(varName, value);
-            }
-        }
-
-        public void WeirdChamp(string varName)
-        {
-            if (Variables.ContainsKey(varName))
-            {
-                try
+                if (!table.ContainsKey(varName))
                 {
-                    Variables[varName] = Console.ReadLine();
+                    p.ExceptionHandler(6, LineN, Line);
                 }
-                catch
+                else
                 {
-                    p.ExceptionHandler(10, LineN, Line);
+                    table[varName] = null;
                 }
             }
             else
             {
+                table.Add(varName, null);
+            }
+        }
+
+        public void PogU(string varName, string type, string value)
+        {
+            bool contains = false;
+            Dictionary<string, string> table = new Dictionary<string, string>();
+            if (Variables.ContainsKey(varName) || VariablesInt.ContainsKey(varName) || VariablesFloat.ContainsKey(varName))
+            {
+                contains = true;
+            }
+            switch (type)
+            {
+                case "string":
+                    table = Variables;
+                    break;
+                case "int":
+                    table = VariablesInt;
+                    break;
+                case "float":
+                    table = VariablesFloat;
+                    break;
+                case "default":
+                    p.ExceptionHandler(11, LineN, Line);
+                    break;
+            }
+            if (contains)
+            {
+                if (!table.ContainsKey(varName))
+                {
+                    p.ExceptionHandler(6, LineN, Line);
+                }
+                else
+                {
+                    table[varName] = value;
+                }
+            }
+            else
+            {
+                table.Add(varName, value);
+            }
+        }
+
+        public void WeirdChamp(string varName, string type)
+        {
+            bool contains = false;
+            Dictionary<string, string> table = new Dictionary<string, string>();
+            if (Variables.ContainsKey(varName) || VariablesInt.ContainsKey(varName) || VariablesFloat.ContainsKey(varName))
+            {
+                contains = true;
+            }
+            switch (type)
+            {
+                case "string":
+                    table = Variables;
+                    break;
+                case "int":
+                    table = VariablesInt;
+                    break;
+                case "float":
+                    table = VariablesFloat;
+                    break;
+                case "default":
+                    p.ExceptionHandler(11, LineN, Line);
+                    break;
+            }
+            if (contains)
+            {
+                if (!table.ContainsKey(varName))
+                {
+                    p.ExceptionHandler(6, LineN, Line);
+                }
+                else
+                {
+                    try
+                    {
+                        table[varName] = Console.ReadLine();
+                    }
+                    catch
+                    {
+                        p.ExceptionHandler(10, LineN, Line);
+                    }
+                }
+            }
+            else
+            {
                 try
                 {
-                    Variables.Add(varName, Console.ReadLine());
+                    table.Add(varName, Console.ReadLine());
                 }
                 catch
                 {
@@ -195,6 +279,7 @@ namespace PogCode_Interpreter
                 string command;
                 string parameter;
                 string parameter2;
+                string parameter3;
                 try
                 {
                     command = line.Substring(0, line.IndexOf(' '));
@@ -252,17 +337,19 @@ namespace PogCode_Interpreter
                         int valueU = line.Count(x => x == ' ');
                         switch(valueU)
                         {
-                            case 0:
+                            case var expression when valueU <= 1:
                                 p.ExceptionHandler(3, i, line);
                                 break;
-                            case 1:
-                                parameter = line.Substring(line.IndexOf(' '));
-                                c.PogU(parameter);
+                            case 2:
+                                parameter = line[line.IndexOf(' ')..line.IndexOf(' ', 1)].Trim();
+                                parameter2 = line.Substring(line.IndexOf(' ', 1)).Trim();
+                                c.PogU(parameter, parameter2);
                                 break;
                             case var expression when valueU >= 2:
                                 parameter = line[line.IndexOf(' ')..line.IndexOf(' ', 1)].Trim();
-                                parameter2 = line.Substring(line.IndexOf(' ')).Trim();
-                                c.PogU(parameter, parameter2);
+                                parameter2 = line[line.IndexOf(' ', 1)..line.IndexOf(' ', 2)].Trim();
+                                parameter3 = line.Substring(line.IndexOf(' ', 2)).Trim();
+                                c.PogU(parameter, parameter2, parameter3);
                                 break;
                         }
                         break;
@@ -271,14 +358,15 @@ namespace PogCode_Interpreter
                         int valueW = line.Count(x => x == ' ');
                         switch (valueW)
                         {
-                            case 0:
+                            case var expression when valueW <= 1:
                                 p.ExceptionHandler(3, i, line);
                                 break;
-                            case 1:
-                                parameter = line.Substring(line.IndexOf(' '));
-                                c.WeirdChamp(parameter);
+                            case 2:
+                                parameter = line[line.IndexOf(' ')..line.IndexOf(' ', 1)].Trim();
+                                parameter2 = line.Substring(line.IndexOf(' ', 1)).Trim();
+                                c.WeirdChamp(parameter, parameter2);
                                 break;
-                            case var expression when valueW >= 2:
+                            case var expression when valueW >= 3:
                                 p.ExceptionHandler(4, i, line);
                                 break;
                         }
@@ -317,7 +405,7 @@ namespace PogCode_Interpreter
                     Console.WriteLine("Invalid argument.");
                     break;
                 case 6:
-                    Console.WriteLine("Variable already exists.");
+                    Console.WriteLine("Variable already exists in another type.");
                     break;
                 case 7:
                     Console.WriteLine("Improper variable formatting.");
@@ -330,6 +418,9 @@ namespace PogCode_Interpreter
                     break;
                 case 10:
                     Console.WriteLine("Error parsing user inputted value.");
+                    break;
+                case 11:
+                    Console.WriteLine("Invalid variable type.");
                     break;
             }
             Console.WriteLine("Press Enter to close window.");
