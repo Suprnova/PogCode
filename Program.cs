@@ -11,6 +11,7 @@ namespace PogCode_Interpreter
     {
         public static int LineN;
         public static string Line;
+        public static Dictionary<string, Dictionary<string, string>> AllVars = new Dictionary<string, Dictionary<string, string>>();
         public static Dictionary<string, string> Variables = new Dictionary<string, string>();
         public static Dictionary<string, string> VariablesInt = new Dictionary<string, string>();
         public static Dictionary<string, string> VariablesFloat = new Dictionary<string, string>();
@@ -27,7 +28,6 @@ namespace PogCode_Interpreter
 
         public void PogChamp(string output)
         {
-            bool contains = false;
             if (output.Contains('{') && output.Contains('}'))
             {
                 if (output.IndexOf('{') > output.IndexOf('}'))
@@ -38,46 +38,16 @@ namespace PogCode_Interpreter
                 {
                     string var = output.Remove(output.IndexOf('}'));
                     var = var.Substring(var.IndexOf('{') + 1);
-                    if (Variables.ContainsKey(var) || VariablesInt.ContainsKey(var) || VariablesFloat.ContainsKey(var))
+                    if (AllVars.ContainsKey(var))
                     {
-                        contains = true;
-                    }
-                    if (contains)
-                    {
-                        if (Variables.ContainsKey(var))
+                        if (AllVars[var] == null)
                         {
-                            if (Variables[var] == null)
-                            {
-                                p.ExceptionHandler(9, LineN, Line);
-                            }
-                            else
-                            {
-                                output = output.Replace($"{{{var}}}", Variables[var]);
-                            }
+                            p.ExceptionHandler(9, LineN, Line);
                         }
-                        else if (VariablesInt.ContainsKey(var))
+                        else
                         {
-                            if (VariablesInt[var] == null)
-                            {
-                                p.ExceptionHandler(9, LineN, Line);
-                            }
-                            else
-                            {
-                                output = output.Replace($"{{{var}}}", VariablesInt[var]);
-                            }
+                            output = output.Replace($"{{{var}}}", AllVars[var][var]);
                         }
-                        else if (VariablesFloat.ContainsKey(var))
-                        {
-                            if (VariablesFloat[var] == null)
-                            {
-                                p.ExceptionHandler(9, LineN, Line);
-                            }
-                            else
-                            {
-                                output = output.Replace($"{{{var}}}", VariablesFloat[var]);
-                            }
-                        }
-                                     
                     }
                 }
             }
@@ -93,7 +63,6 @@ namespace PogCode_Interpreter
 
         public void Pog(string output)
         {
-            bool contains = false;
             if (output.Contains('{') && output.Contains('}'))
             {
                 if (output.IndexOf('{') > output.IndexOf('}'))
@@ -104,46 +73,16 @@ namespace PogCode_Interpreter
                 {
                     string var = output.Remove(output.IndexOf('}'));
                     var = var.Substring(var.IndexOf('{') + 1);
-                    if (Variables.ContainsKey(var) || VariablesInt.ContainsKey(var) || VariablesFloat.ContainsKey(var))
+                    if (AllVars.ContainsKey(var))
                     {
-                        contains = true;
-                    }
-                    if (contains)
-                    {
-                        if (Variables.ContainsKey(var))
+                        if (AllVars[var] == null)
                         {
-                            if (Variables[var] == null)
-                            {
-                                p.ExceptionHandler(9, LineN, Line);
-                            }
-                            else
-                            {
-                                output = output.Replace($"{{{var}}}", Variables[var]);
-                            }
+                            p.ExceptionHandler(9, LineN, Line);
                         }
-                        else if (VariablesInt.ContainsKey(var))
+                        else
                         {
-                            if (VariablesInt[var] == null)
-                            {
-                                p.ExceptionHandler(9, LineN, Line);
-                            }
-                            else
-                            {
-                                output = output.Replace($"{{{var}}}", VariablesInt[var]);
-                            }
+                            output = output.Replace($"{{{var}}}", AllVars[var][var]);
                         }
-                        else if (VariablesFloat.ContainsKey(var))
-                        {
-                            if (VariablesFloat[var] == null)
-                            {
-                                p.ExceptionHandler(9, LineN, Line);
-                            }
-                            else
-                            {
-                                output = output.Replace($"{{{var}}}", VariablesFloat[var]);
-                            }
-                        }
-
                     }
                 }
             }
@@ -199,6 +138,7 @@ namespace PogCode_Interpreter
             else
             {
                 table.Add(varName, null);
+                AllVars.Add(varName, table);
             }
         }
 
@@ -239,6 +179,7 @@ namespace PogCode_Interpreter
             else
             {
                 table.Add(varName, value);
+                AllVars.Add(varName, table);
             }
         }
 
@@ -288,6 +229,7 @@ namespace PogCode_Interpreter
                 try
                 {
                     table.Add(varName, Console.ReadLine());
+                    AllVars.Add(varName, table);
                 }
                 catch
                 {
