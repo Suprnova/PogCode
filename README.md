@@ -24,10 +24,12 @@ Pog  I DONT KNOW
 Kappa PauseChamp waits for user input
 PauseChamp
 Kappa PogU creates a variable of the specified name with the specified value
-PogU AYAYA funny_emote
+PogU AYAYA string funny_emote
 Kappa WeirdChamp creates a variable of the specified name with a user inputted value
-WeirdChamp KappaPride
+WeirdChamp string KappaPride
 Kappa {}s around a word means its a variable
 PogChamp {AYAYA}
 Pog {KappaPride}
+Kappa PogO is a debugging breakpoint
+PogO
 ```
