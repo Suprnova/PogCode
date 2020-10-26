@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using static PogCode_Interpreter.Globals;
@@ -26,6 +27,7 @@ namespace PogCode_Interpreter
 
         public void PogChamp(string output)
         {
+            bool contains = false;
             if (output.Contains('{') && output.Contains('}'))
             {
                 if (output.IndexOf('{') > output.IndexOf('}'))
@@ -36,22 +38,52 @@ namespace PogCode_Interpreter
                 {
                     string var = output.Remove(output.IndexOf('}'));
                     var = var.Substring(var.IndexOf('{') + 1);
-                    if (Globals.Variables.ContainsKey(var))
+                    if (Variables.ContainsKey(var) || VariablesInt.ContainsKey(var) || VariablesFloat.ContainsKey(var))
                     {
-                        if (Variables[var] == null)
+                        contains = true;
+                    }
+                    if (contains)
+                    {
+                        if (Variables.ContainsKey(var))
                         {
-                            p.ExceptionHandler(9, LineN, Line);
+                            if (Variables[var] == null)
+                            {
+                                p.ExceptionHandler(9, LineN, Line);
+                            }
+                            else
+                            {
+                                output = output.Replace($"{{{var}}}", Variables[var]);
+                            }
                         }
-                        else
+                        else if (VariablesInt.ContainsKey(var))
                         {
-                            output = output.Replace($"{{{var}}}", Globals.Variables[var]);
-                        }                      
+                            if (VariablesInt[var] == null)
+                            {
+                                p.ExceptionHandler(9, LineN, Line);
+                            }
+                            else
+                            {
+                                output = output.Replace($"{{{var}}}", VariablesInt[var]);
+                            }
+                        }
+                        else if (VariablesFloat.ContainsKey(var))
+                        {
+                            if (VariablesFloat[var] == null)
+                            {
+                                p.ExceptionHandler(9, LineN, Line);
+                            }
+                            else
+                            {
+                                output = output.Replace($"{{{var}}}", VariablesFloat[var]);
+                            }
+                        }
+                                     
                     }
                 }
             }
             try
             {
-                Console.WriteLine(output);
+                Console.WriteLine(output.Trim());
             }
             catch
             {
@@ -61,6 +93,7 @@ namespace PogCode_Interpreter
 
         public void Pog(string output)
         {
+            bool contains = false;
             if (output.Contains('{') && output.Contains('}'))
             {
                 if (output.IndexOf('{') > output.IndexOf('}'))
@@ -71,22 +104,52 @@ namespace PogCode_Interpreter
                 {
                     string var = output.Remove(output.IndexOf('}'));
                     var = var.Substring(var.IndexOf('{') + 1);
-                    if (Globals.Variables.ContainsKey(var))
+                    if (Variables.ContainsKey(var) || VariablesInt.ContainsKey(var) || VariablesFloat.ContainsKey(var))
                     {
-                        if (Variables[var] == null)
+                        contains = true;
+                    }
+                    if (contains)
+                    {
+                        if (Variables.ContainsKey(var))
                         {
-                            p.ExceptionHandler(9, LineN, Line);
+                            if (Variables[var] == null)
+                            {
+                                p.ExceptionHandler(9, LineN, Line);
+                            }
+                            else
+                            {
+                                output = output.Replace($"{{{var}}}", Variables[var]);
+                            }
                         }
-                        else
+                        else if (VariablesInt.ContainsKey(var))
                         {
-                            output = output.Replace($"{{{var}}}", Globals.Variables[var]);
+                            if (VariablesInt[var] == null)
+                            {
+                                p.ExceptionHandler(9, LineN, Line);
+                            }
+                            else
+                            {
+                                output = output.Replace($"{{{var}}}", VariablesInt[var]);
+                            }
                         }
+                        else if (VariablesFloat.ContainsKey(var))
+                        {
+                            if (VariablesFloat[var] == null)
+                            {
+                                p.ExceptionHandler(9, LineN, Line);
+                            }
+                            else
+                            {
+                                output = output.Replace($"{{{var}}}", VariablesFloat[var]);
+                            }
+                        }
+
                     }
                 }
             }
             try
             {
-                Console.Write(output);
+                Console.Write(output.Trim());
             }
             catch
             {
@@ -341,14 +404,14 @@ namespace PogCode_Interpreter
                                 p.ExceptionHandler(3, i, line);
                                 break;
                             case 2:
-                                parameter = line[line.IndexOf(' ')..line.IndexOf(' ', 1)].Trim();
-                                parameter2 = line.Substring(line.IndexOf(' ', 1)).Trim();
+                                parameter = line[line.IndexOf(' ')..line.IndexOf(' ', line.IndexOf(' ') + 1)].Trim();
+                                parameter2 = line.Substring(line.IndexOf(' ', line.IndexOf(' ') + 1)).Trim();
                                 c.PogU(parameter, parameter2);
                                 break;
                             case var expression when valueU >= 2:
-                                parameter = line[line.IndexOf(' ')..line.IndexOf(' ', 1)].Trim();
-                                parameter2 = line[line.IndexOf(' ', 1)..line.IndexOf(' ', 2)].Trim();
-                                parameter3 = line.Substring(line.IndexOf(' ', 2)).Trim();
+                                parameter = line[line.IndexOf(' ')..line.IndexOf(' ', line.IndexOf(' ') + 1)].Trim();
+                                parameter2 = line[(line.IndexOf(' ', line.IndexOf(' ') + 1))..line.IndexOf(' ', line.IndexOf(' ', line.IndexOf(' ') + 1) + 1)].Trim();
+                                parameter3 = line.Substring(line.IndexOf(' ', line.IndexOf(' ', line.IndexOf(' ') + 1) + 1)).Trim();
                                 c.PogU(parameter, parameter2, parameter3);
                                 break;
                         }
@@ -362,8 +425,8 @@ namespace PogCode_Interpreter
                                 p.ExceptionHandler(3, i, line);
                                 break;
                             case 2:
-                                parameter = line[line.IndexOf(' ')..line.IndexOf(' ', 1)].Trim();
-                                parameter2 = line.Substring(line.IndexOf(' ', 1)).Trim();
+                                parameter = line[line.IndexOf(' ')..line.IndexOf(' ', line.IndexOf(' ') + 1)].Trim();
+                                parameter2 = line.Substring(line.IndexOf(' ', line.IndexOf(' ') + 1)).Trim();
                                 c.WeirdChamp(parameter, parameter2);
                                 break;
                             case var expression when valueW >= 3:
@@ -371,12 +434,15 @@ namespace PogCode_Interpreter
                                 break;
                         }
                         break;
+                    case "PogO":
+                        Debugger.Break();
+                        break;
                     default:
                         p.ExceptionHandler(0, i, line);
                         break;
                 }
             }
-            Console.WriteLine("Script completed all commands. Press Enter to exit.");
+            Console.WriteLine("\nScript completed all commands. Press Enter to exit.");
             Console.ReadLine();
         }
 
