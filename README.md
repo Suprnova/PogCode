@@ -9,6 +9,7 @@ Emote | Command | Description
 ![PauseChamp](https://cdn.frankerfacez.com/emoticon/349048/1) | PauseChamp | Waits for the user to press Enter.
 ![PogU](https://cdn.frankerfacez.com/emoticon/256055/1) | PogU | Creates a variable, **can't have a space in it.**
 ![WeirdChamp](https://cdn.frankerfacez.com/emoticon/262468/1) | WeirdChamp | Creates a variable with the value provided by the user.
+![PogO](https://cdn.frankerfacez.com/emoticon/401202/1) | PogO | Creates a breakpoint for the IDE.
 ![Kappa](https://static-cdn.jtvnw.net/emoticons/v1/25/1.0) | Kappa | Acts as a comment line.
 
 # Variables
