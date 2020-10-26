@@ -2,9 +2,154 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using static PogCode_Interpreter.Globals;
 
 namespace PogCode_Interpreter
 {
+    class Globals
+    {
+        public static int LineN;
+        public static string Line;
+        public static Dictionary<string, string> Variables = new Dictionary<string, string>();
+        public static Dictionary<string, int> VariablesInt = new Dictionary<string, int>();
+        public static Dictionary<string, float> VariablesFloat = new Dictionary<string, float>();
+    }
+
+    class Commands
+    {
+        Program p = new Program();
+
+        public void PogChamp()
+        {
+            Console.WriteLine();
+        }
+
+        public void PogChamp(string output)
+        {
+            if (output.Contains('{') && output.Contains('}'))
+            {
+                if (output.IndexOf('{') > output.IndexOf('}'))
+                {
+                    p.ExceptionHandler(7, LineN, Line);
+                }
+                else
+                {
+                    string var = output.Remove(output.IndexOf('}'));
+                    var = var.Substring(var.IndexOf('{') + 1);
+                    if (Globals.Variables.ContainsKey(var))
+                    {
+                        if (Variables[var] == null)
+                        {
+                            p.ExceptionHandler(9, LineN, Line);
+                        }
+                        else
+                        {
+                            output = output.Replace($"{{{var}}}", Globals.Variables[var]);
+                        }                      
+                    }
+                }
+            }
+            try
+            {
+                Console.WriteLine(output);
+            }
+            catch
+            {
+                p.ExceptionHandler(8, LineN, Line);
+            }
+        }
+
+        public void Pog(string output)
+        {
+            if (output.Contains('{') && output.Contains('}'))
+            {
+                if (output.IndexOf('{') > output.IndexOf('}'))
+                {
+                    p.ExceptionHandler(7, LineN, Line);
+                }
+                else
+                {
+                    string var = output.Remove(output.IndexOf('}'));
+                    var = var.Substring(var.IndexOf('{') + 1);
+                    if (Globals.Variables.ContainsKey(var))
+                    {
+                        if (Variables[var] == null)
+                        {
+                            p.ExceptionHandler(9, LineN, Line);
+                        }
+                        else
+                        {
+                            output = output.Replace($"{{{var}}}", Globals.Variables[var]);
+                        }
+                    }
+                }
+            }
+            try
+            {
+                Console.Write(output);
+            }
+            catch
+            {
+                p.ExceptionHandler(8, LineN, Line);
+            }
+        }
+
+        public void PauseChamp()
+        {
+            Console.ReadLine();
+        }
+
+        public void PogU(string varName)
+        {
+            if (Variables.ContainsKey(varName))
+            {
+                Variables[varName] = null;
+            }
+            else
+            {
+                Variables.Add(varName, null);
+            }
+        }
+
+        public void PogU(string varName, string value)
+        {
+            if (Variables.ContainsKey(varName))
+            {
+                Variables[varName] = value;
+            }
+            else
+            {
+                Variables.Add(varName, value);
+            }
+        }
+
+        public void WeirdChamp(string varName)
+        {
+            if (Variables.ContainsKey(varName))
+            {
+                try
+                {
+                    Variables[varName] = Console.ReadLine();
+                }
+                catch
+                {
+                    p.ExceptionHandler(10, LineN, Line);
+                }
+            }
+            else
+            {
+                try
+                {
+                    Variables.Add(varName, Console.ReadLine());
+                }
+                catch
+                {
+                    p.ExceptionHandler(10, LineN, Line);
+                }
+            }
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
@@ -40,12 +185,16 @@ namespace PogCode_Interpreter
         private static void Interpreter(string file)
         {
             Console.Clear();
+            Program p = new Program();
+            Commands c = new Commands();
             Dictionary<string, string> variables = new Dictionary<string, string>();
             var lines = File.ReadAllLines(file);
             int i = 0;
             foreach (var line in lines)
             {
                 string command;
+                string parameter;
+                string parameter2;
                 try
                 {
                     command = line.Substring(0, line.IndexOf(' '));
@@ -55,6 +204,8 @@ namespace PogCode_Interpreter
                     command = line;
                 }
                 i++;
+                Globals.Line = line;
+                Globals.LineN = i;
                 switch (command)
                 {
                     // Kappa - Comment
@@ -62,118 +213,78 @@ namespace PogCode_Interpreter
                         break;
                     // PogChamp - WriteLine
                     case "PogChamp":
-                        if (!line.StartsWith("PogChamp ") || string.IsNullOrWhiteSpace(line.Replace("PogChamp ", "")))
+                        if (!line.Contains(' '))
                         {
-                            Console.WriteLine();
-                            break;
+                            c.PogChamp();
                         }
-                        string argPogC = line.Replace("PogChamp ", "");
-                        if (argPogC.Contains('{') && argPogC.Contains('}'))
+                        else
                         {
-                            if (argPogC.IndexOf('{') > argPogC.IndexOf('}'))
-                            {
-                                ExceptionHandler(7, i, line);
-                            }
-                            else
-                            {
-                                string var = argPogC.Remove(argPogC.IndexOf('}'));
-                                var = var.Substring(var.IndexOf('{') + 1);
-                                if (variables.ContainsKey(var))
-                                {
-                                    argPogC = argPogC.Replace($"{{{var}}}", variables[var]);
-                                }
-                            }
+                            parameter = line.Substring(line.IndexOf(' '));
+                            c.PogChamp(parameter);
                         }
-                        Console.WriteLine(argPogC);
                         break;
                     case "Pog":
-                        if (!line.StartsWith("Pog ") || string.IsNullOrWhiteSpace(line.Replace("Pog ", "")))
+                        if (!line.Contains(' '))
                         {
                             //no arg
-                            ExceptionHandler(1, i, line);
+                            p.ExceptionHandler(1, i, line);
                         }
-                        string argPog = line.Replace("Pog ", "");
-                        if (argPog.Contains('{') && argPog.Contains('}'))
+                        else
                         {
-                            if (argPog.IndexOf('{') > argPog.IndexOf('}'))
-                            {
-                                ExceptionHandler(7, i, line);
-                            }
-                            else
-                            {
-                                string var = argPog.Remove(argPog.IndexOf('}'));
-                                var = var.Substring(var.IndexOf('{') + 1);
-                                if (variables.ContainsKey(var))
-                                {
-                                    argPog = argPog.Replace($"{{{var}}}", variables[var]);
-                                }
-                            }
+                            parameter = line.Substring(line.IndexOf(' '));
+                            c.Pog(parameter);
                         }
-                        Console.Write(argPog);
                         break;
                     // PauseChamp - ReadLine
                     case "PauseChamp":
-                        if (!string.IsNullOrWhiteSpace(line.Replace("PauseChamp", "")))
+                        if (line.Contains(' '))
                         {
-                            //unexpected arg
-                            ExceptionHandler(2, i, line);
+                            // unexpected arg
+                            p.ExceptionHandler(2, i, line);
                         }
-                        Console.ReadLine();
+                        else
+                        {
+                            c.PauseChamp();
+                        }
                         break;
                     // PogU - Variable
                     case "PogU":
-                        if (line.Count(x => x == ' ') < 2)
+                        int valueU = line.Count(x => x == ' ');
+                        switch(valueU)
                         {
-                            //not enough args
-                            ExceptionHandler(3, i, line);
+                            case 0:
+                                p.ExceptionHandler(3, i, line);
+                                break;
+                            case 1:
+                                parameter = line.Substring(line.IndexOf(' '));
+                                c.PogU(parameter);
+                                break;
+                            case var expression when valueU >= 2:
+                                parameter = line[line.IndexOf(' ')..line.IndexOf(' ', 1)].Trim();
+                                parameter2 = line.Substring(line.IndexOf(' ')).Trim();
+                                c.PogU(parameter, parameter2);
+                                break;
                         }
-                        else if (line.Count(x => x == ' ') > 2)
-                        {
-                            //too many args
-                            ExceptionHandler(4, i, line);
-                        }
-                        string varPU = line[line.IndexOf(' ')..line.LastIndexOf(' ')].Trim();
-                        string valuePU = line.Substring(line.LastIndexOf(' ')).Trim();
-                        if (string.IsNullOrWhiteSpace(varPU) || string.IsNullOrWhiteSpace(valuePU))
-                        {
-                            //invalid arg
-                            ExceptionHandler(5, i, line);
-                        }
-                        if (variables.ContainsKey(varPU))
-                        {
-                            //var exists
-                            ExceptionHandler(6, i, line);
-                        }
-                        variables.Add(varPU, valuePU);
                         break;
                     // WeirdChamp - ReadLine + Variable
                     case "WeirdChamp":
-                        if (line.Count(x => x == ' ') < 1)
+                        int valueW = line.Count(x => x == ' ');
+                        switch (valueW)
                         {
-                            //not enough args
-                            ExceptionHandler(3, i, line);
+                            case 0:
+                                p.ExceptionHandler(3, i, line);
+                                break;
+                            case 1:
+                                parameter = line.Substring(line.IndexOf(' '));
+                                c.WeirdChamp(parameter);
+                                break;
+                            case var expression when valueW >= 2:
+                                p.ExceptionHandler(4, i, line);
+                                break;
                         }
-                        else if (line.Count(x => x == ' ') > 1)
-                        {
-                            //too many args
-                            ExceptionHandler(4, i, line);
-                        }
-                        string varWC = line.Substring(line.IndexOf(' ')).Trim();
-                        if (string.IsNullOrWhiteSpace(varWC))
-                        {
-                            //invalid arg
-                            ExceptionHandler(5, i, line);
-                        }
-                        if (variables.ContainsKey(varWC))
-                        {
-                            //var exists
-                            ExceptionHandler(6, i, line);
-                        }
-                        string valueWC = Console.ReadLine();
-                        variables.Add(varWC, valueWC);
                         break;
                     default:
-                        ExceptionHandler(0, i, line);
+                        p.ExceptionHandler(0, i, line);
                         break;
                 }
             }
@@ -181,18 +292,14 @@ namespace PogCode_Interpreter
             Console.ReadLine();
         }
 
-        private static void ExceptionHandler(int exCode, int lineNumber, string line)
+        public void ExceptionHandler(int exCode, int lineNumber, string line)
         {
             Console.WriteLine();
             Console.WriteLine($"Exception code {exCode} occurred at line {lineNumber}: {line}");
             switch (exCode)
             {
                 case 0:
-                    if (!line.Contains(' '))
-                    {
-                        Console.WriteLine("Unrecognized command.");
-                    }
-                    Console.WriteLine("Unrecognized command: " + line.Substring(0, line.IndexOf(' ')));
+                    Console.WriteLine("Unrecognized command");
                     break;
                 case 1:
                     Console.WriteLine("No arguments provided.");
@@ -215,7 +322,17 @@ namespace PogCode_Interpreter
                 case 7:
                     Console.WriteLine("Improper variable formatting.");
                     break;
+                case 8:
+                    Console.WriteLine("Invalid output to console.");
+                    break;
+                case 9:
+                    Console.WriteLine("Usage of a null variable.");
+                    break;
+                case 10:
+                    Console.WriteLine("Error parsing user inputted value.");
+                    break;
             }
+            Console.WriteLine("Press Enter to close window.");
             Console.ReadLine();
             Environment.Exit(1);
         }
