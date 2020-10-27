@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using static PogCode_Interpreter.Globals;
 
 namespace PogCode_Interpreter
@@ -96,7 +97,7 @@ namespace PogCode_Interpreter
             }
         }
 
-        public void PauseChamp()
+        public void PogChap()
         {
             Console.ReadLine();
         }
@@ -120,7 +121,7 @@ namespace PogCode_Interpreter
                 case "float":
                     table = VariablesFloat;
                     break;
-                case "default":
+                default:
                     p.ExceptionHandler(11, LineN, Line);
                     break;
             }
@@ -161,7 +162,7 @@ namespace PogCode_Interpreter
                 case "float":
                     table = VariablesFloat;
                     break;
-                case "default":
+                default:
                     p.ExceptionHandler(11, LineN, Line);
                     break;
             }
@@ -202,7 +203,7 @@ namespace PogCode_Interpreter
                 case "float":
                     table = VariablesFloat;
                     break;
-                case "default":
+                default:
                     p.ExceptionHandler(11, LineN, Line);
                     break;
             }
@@ -236,6 +237,20 @@ namespace PogCode_Interpreter
                     p.ExceptionHandler(10, LineN, Line);
                 }
             }
+        }
+
+        public void PauseChamp(string parameter)
+        {
+            int duration = 0;
+            try
+            {
+                duration = Int32.Parse(parameter);
+            }
+            catch
+            {
+                p.ExceptionHandler(5, LineN, Line);
+            }
+            Thread.Sleep(duration);
         }
     }
 
@@ -325,8 +340,8 @@ namespace PogCode_Interpreter
                             c.Pog(parameter);
                         }
                         break;
-                    // PauseChamp - ReadLine
-                    case "PauseChamp":
+                    // PogChap - ReadLine
+                    case "PogChap":
                         if (line.Contains(' '))
                         {
                             // unexpected arg
@@ -334,7 +349,7 @@ namespace PogCode_Interpreter
                         }
                         else
                         {
-                            c.PauseChamp();
+                            c.PogChap();
                         }
                         break;
                     // PogU - Variable
@@ -374,6 +389,18 @@ namespace PogCode_Interpreter
                             case var expression when valueW >= 3:
                                 p.ExceptionHandler(4, i, line);
                                 break;
+                        }
+                        break;
+                    case "PauseChamp":
+                        if (!line.Contains(' '))
+                        {
+                            //no arg
+                            p.ExceptionHandler(1, i, line);
+                        }
+                        else
+                        {
+                            parameter = line.Substring(line.IndexOf(' '));
+                            c.PauseChamp(parameter);
                         }
                         break;
                     case "PogO":
