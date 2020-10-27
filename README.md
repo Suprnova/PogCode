@@ -1,4 +1,6 @@
 # PogCode
+[![CodeFactor](https://www.codefactor.io/repository/github/suprnova123/pogcode/badge)](https://www.codefactor.io/repository/github/suprnova123/pogcode) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+---
 A basic programming language written in C#, based on PogChamp and its derivative emotes.
 
 # Commands
