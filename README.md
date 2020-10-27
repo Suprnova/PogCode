@@ -15,7 +15,7 @@ Emote | Command | Description
 ![Kappa](https://static-cdn.jtvnw.net/emoticons/v1/25/1.0) | Kappa | Acts as a comment line.
 
 # Variables
-To use a variable in a PogChamp or Pog, simply encase the name of the variable in {}s.
+To use a variable in any command, simply encase the name of the variable in {}s.
 
 # Example
 ```
