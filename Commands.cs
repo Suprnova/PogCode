@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Threading;
 using static PogCode_Interpreter.Globals;
 
@@ -20,37 +17,6 @@ namespace PogCode_Interpreter
 
         public void PogChamp(string output)
         {
-            if (output.Contains('{') && output.Contains('}'))
-            {
-                if (output.IndexOf('{') > output.IndexOf('}'))
-                {
-                    p.ExceptionHandler(7, LineN, Line);
-                }
-                else
-                {
-                    do
-                    {
-                        string var = output.Remove(output.IndexOf('}'));
-                        var = var.Substring(var.IndexOf('{') + 1);
-                        if (AllVars.ContainsKey(var))
-                        {
-                            if (AllVars[var] == null)
-                            {
-                                p.ExceptionHandler(9, LineN, Line);
-                            }
-                            else
-                            {
-                                output = output.Replace($"{{{var}}}", AllVars[var][var]);
-                            }
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    while (output.Contains('{'));
-                }
-            }
             try
             {
                 Console.WriteLine(output.Trim());
@@ -63,37 +29,6 @@ namespace PogCode_Interpreter
 
         public void Pog(string output)
         {
-            if (output.Contains('{') && output.Contains('}'))
-            {
-                if (output.IndexOf('{') > output.IndexOf('}'))
-                {
-                    p.ExceptionHandler(7, LineN, Line);
-                }
-                else
-                {
-                    do
-                    {
-                        string var = output.Remove(output.IndexOf('}'));
-                        var = var.Substring(var.IndexOf('{') + 1);
-                        if (AllVars.ContainsKey(var))
-                        {
-                            if (AllVars[var] == null)
-                            {
-                                p.ExceptionHandler(9, LineN, Line);
-                            }
-                            else
-                            {
-                                output = output.Replace($"{{{var}}}", AllVars[var][var]);
-                            }
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    while (output.Contains('{'));
-                }
-            }
             try
             {
                 Console.Write(output.Trim());
@@ -248,29 +183,6 @@ namespace PogCode_Interpreter
 
         public void PauseChamp(string parameter)
         {
-            if (parameter.Contains('{') && parameter.Contains('}'))
-            {
-                if (parameter.IndexOf('{') > parameter.IndexOf('}'))
-                {
-                    p.ExceptionHandler(7, LineN, Line);
-                }
-                else
-                {
-                    string var = parameter.Remove(parameter.IndexOf('}'));
-                    var = var.Substring(var.IndexOf('{') + 1);
-                    if (AllVars.ContainsKey(var))
-                    {
-                        if (AllVars[var] == null)
-                        {
-                            p.ExceptionHandler(9, LineN, Line);
-                        }
-                        else
-                        {
-                            parameter = parameter.Replace($"{{{var}}}", AllVars[var][var]);
-                        }
-                    }
-                }
-            }
             int duration = 0;
             try
             {
@@ -285,43 +197,6 @@ namespace PogCode_Interpreter
 
         public void BrainChamp(string equation)
         {
-            if (equation.Contains('{') && equation.Contains('}'))
-            {
-                int openBrac = equation.Count(x => x == '{');
-                int closeBrac = equation.Count(x => x == '}');
-                if (openBrac != closeBrac)
-                {
-                    p.ExceptionHandler(7, LineN, Line);
-                }
-                try
-                {
-                    do
-                    {
-                        string var = equation.Remove(equation.IndexOf('}'));
-                        var = var.Substring(var.IndexOf('{') + 1);
-                        if (AllVars.ContainsKey(var))
-                        {
-                            if (AllVars[var] == null)
-                            {
-                                p.ExceptionHandler(9, LineN, Line);
-                            }
-                            else
-                            {
-                                equation = equation.Replace($"{{{var}}}", AllVars[var][var]);
-                            }
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    while (equation.Contains('{'));
-                }
-                catch
-                {
-                    p.ExceptionHandler(7, LineN, Line);
-                }
-            }
             try
             {
                 double result = Convert.ToDouble(new DataTable().Compute(equation, null));

@@ -53,25 +53,35 @@ namespace PogCode_Interpreter
             Console.Clear();
             Program p = new Program();
             Commands c = new Commands();
+            Variable_Replacing v = new Variable_Replacing();
             Dictionary<string, string> variables = new Dictionary<string, string>();
             var lines = File.ReadAllLines(file);
             int i = 0;
-            foreach (var line in lines)
+            foreach (var lineF in lines)
             {
                 string command;
+                string line;
                 string parameter;
                 string parameter2;
                 string parameter3;
                 try
                 {
-                    command = line.Substring(0, line.IndexOf(' '));
+                    command = lineF.Substring(0, lineF.IndexOf(' '));
                 }
                 catch
                 {
-                    command = line;
+                    command = lineF;
+                }
+                if (lineF.Contains('{') && lineF.Contains('}'))
+                {
+                    line = v.Replace(lineF);
+                }
+                else
+                {
+                    line = lineF;
                 }
                 i++;
-                Globals.Line = line;
+                Globals.Line = lineF;
                 Globals.LineN = i;
                 switch (command)
                 {
