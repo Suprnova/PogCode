@@ -258,6 +258,29 @@ namespace PogCode_Interpreter
 
         public void PauseChamp(string parameter)
         {
+            if (parameter.Contains('{') && parameter.Contains('}'))
+            {
+                if (parameter.IndexOf('{') > parameter.IndexOf('}'))
+                {
+                    p.ExceptionHandler(7, LineN, Line);
+                }
+                else
+                {
+                    string var = parameter.Remove(parameter.IndexOf('}'));
+                    var = var.Substring(var.IndexOf('{') + 1);
+                    if (AllVars.ContainsKey(var))
+                    {
+                        if (AllVars[var] == null)
+                        {
+                            p.ExceptionHandler(9, LineN, Line);
+                        }
+                        else
+                        {
+                            parameter = parameter.Replace($"{{{var}}}", AllVars[var][var]);
+                        }
+                    }
+                }
+            }
             int duration = 0;
             try
             {
