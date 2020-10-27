@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -252,6 +253,56 @@ namespace PogCode_Interpreter
             }
             Thread.Sleep(duration);
         }
+
+        public void BrainChamp(string equation)
+        {
+            if (equation.Contains('{') && equation.Contains('}'))
+            {
+                int openBrac = equation.Count(x => x == '{');
+                int closeBrac = equation.Count(x => x == '}');
+                if (openBrac != closeBrac)
+                {
+                    p.ExceptionHandler(7, LineN, Line);
+                }
+                try
+                {
+                    do
+                    {
+                        string var = equation.Remove(equation.IndexOf('}'));
+                        var = var.Substring(var.IndexOf('{') + 1);
+                        if (AllVars.ContainsKey(var))
+                        {
+                            if (AllVars[var] == null)
+                            {
+                                p.ExceptionHandler(9, LineN, Line);
+                            }
+                            else
+                            {
+                                equation = equation.Replace($"{{{var}}}", AllVars[var][var]);
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    while (equation.Contains('{'));
+                }
+                catch
+                {
+                    p.ExceptionHandler(7, LineN, Line);
+                }              
+            }
+            try
+            {
+                double result = Convert.ToDouble(new DataTable().Compute(equation, null));
+                Console.WriteLine(result);
+            }
+            catch
+            {
+                p.ExceptionHandler(12, LineN, Line);
+            }
+        }
     }
 
     class Program
@@ -403,6 +454,17 @@ namespace PogCode_Interpreter
                             c.PauseChamp(parameter);
                         }
                         break;
+                    case "BrainChamp":
+                        if (!line.Contains(' '))
+                        {
+                            p.ExceptionHandler(1, i, line);
+                        }
+                        else
+                        {
+                            parameter = line.Substring(line.IndexOf(' '));
+                            c.BrainChamp(parameter);
+                        }
+                        break;
                     case "PogO":
                         Debugger.Break();
                         break;
@@ -456,6 +518,9 @@ namespace PogCode_Interpreter
                     break;
                 case 11:
                     Console.WriteLine("Invalid variable type.");
+                    break;
+                case 12:
+                    Console.WriteLine("Invalid math operation.");
                     break;
             }
             Console.WriteLine("Press Enter to close window.");
