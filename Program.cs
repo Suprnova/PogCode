@@ -38,19 +38,27 @@ namespace PogCode_Interpreter
                 }
                 else
                 {
-                    string var = output.Remove(output.IndexOf('}'));
-                    var = var.Substring(var.IndexOf('{') + 1);
-                    if (AllVars.ContainsKey(var))
+                    do
                     {
-                        if (AllVars[var] == null)
+                        string var = output.Remove(output.IndexOf('}'));
+                        var = var.Substring(var.IndexOf('{') + 1);
+                        if (AllVars.ContainsKey(var))
                         {
-                            p.ExceptionHandler(9, LineN, Line);
+                            if (AllVars[var] == null)
+                            {
+                                p.ExceptionHandler(9, LineN, Line);
+                            }
+                            else
+                            {
+                                output = output.Replace($"{{{var}}}", AllVars[var][var]);
+                            }
                         }
                         else
                         {
-                            output = output.Replace($"{{{var}}}", AllVars[var][var]);
+                            break;
                         }
                     }
+                    while (output.Contains('{'));
                 }
             }
             try
@@ -73,19 +81,27 @@ namespace PogCode_Interpreter
                 }
                 else
                 {
-                    string var = output.Remove(output.IndexOf('}'));
-                    var = var.Substring(var.IndexOf('{') + 1);
-                    if (AllVars.ContainsKey(var))
+                    do
                     {
-                        if (AllVars[var] == null)
+                        string var = output.Remove(output.IndexOf('}'));
+                        var = var.Substring(var.IndexOf('{') + 1);
+                        if (AllVars.ContainsKey(var))
                         {
-                            p.ExceptionHandler(9, LineN, Line);
+                            if (AllVars[var] == null)
+                            {
+                                p.ExceptionHandler(9, LineN, Line);
+                            }
+                            else
+                            {
+                                output = output.Replace($"{{{var}}}", AllVars[var][var]);
+                            }
                         }
                         else
                         {
-                            output = output.Replace($"{{{var}}}", AllVars[var][var]);
+                            break;
                         }
                     }
+                    while (output.Contains('{'));
                 }
             }
             try
