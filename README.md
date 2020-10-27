@@ -29,12 +29,16 @@ PauseChamp 1000
 Kappa PogU creates a variable of the specified name with the specified value
 PogU AYAYA string funny_emote
 Kappa WeirdChamp creates a variable of the specified name with a user inputted value
-WeirdChamp string KappaPride
+WeirdChamp KappaPride string
 Kappa PogChap waits for the user to press Enter.
 PogChap
 Kappa {}s around a word means its a variable
 PogChamp {AYAYA}
 Pog {KappaPride}
+PogU math1 int 6
+PogU math2 float 8.32
+Kappa BrainChamp performs math operations
+BrainChamp {math1} - {math2}
 Kappa PogO is a debugging breakpoint
 PogO
 ```
