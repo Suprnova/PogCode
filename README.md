@@ -6,7 +6,7 @@ A basic programming language written in C#, based on PogChamp and its derivative
 # Commands
 Emote | Command | Description
 ------------ | ------------ | -------------
-![PogChamp](https://static-cdn.jtvnw.net/emoticons/v1/88/1.0) | PogChamp | Writes to a new line in console.
+<img width="32px" src="https://screenshots.gamebanana.com/img/ico/sprays/59036c7d253c0.png"> | PogChamp | Writes to a new line in console.
 ![Pog](https://cdn.frankerfacez.com/emoticon/210748/1) | Pog | Writes to the current line in console.
 ![PogChap](https://cdn.frankerfacez.com/emoticon/14935/1) | PogChap | Waits for the user to press Enter.
 ![PauseChamp](https://cdn.frankerfacez.com/emoticon/349048/1) | PauseChamp | Sleeps.
